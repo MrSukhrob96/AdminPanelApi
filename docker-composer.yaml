@@ -1,0 +1,44 @@
+version: "3.7"
+servuces:
+	frontend:
+		image: antoniopapa1991/admin-frontend
+        depends_on:
+            - backend
+        networks:
+            -app
+	backend:
+        container_name: admin_api
+        build: 
+            context: -
+            dockerfile: Dockerfile
+        envioriment:
+			DB_HOST: db
+			DB_DATABASE: admin
+			DB_USERNAME: root
+			DB_PASSWORD: root
+        ports:
+        -8888:8888
+        volumes:
+        - .:/app
+        depends_on:
+            - db
+        networks:
+            -app
+	db:
+		container_name: admin_db
+		image: mysql: 5.7.22
+		envioriment:
+			MYSQL_DATABASE: admin
+			MYSQL_USER: root
+			MYSQL_PASSWORD: root
+			MYSQL_ROOT_PASSWORD: root
+		volumes:
+        -.dbdata:/var/lib/mysql
+        ports:
+        - 33066:3306
+        networks:
+            -app
+            
+networks:
+    -app			
+			

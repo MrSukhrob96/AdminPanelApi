@@ -1,0 +1,14 @@
+0) docker - ни ищлатиш учун аввал Dockerfile ни сунгра 
+1) dockerfile-composer.yaml ни тузиб олиш лозим
+
+2) Консолга эса docker-composer up деб юргизворшимиз лозим экан
+
+3) php artisan migrate килиш учун docker pc дан бизга керакли булган контайнер номини танлаб оламз
+ ундан кейин  docker exect -it admin-api sh шундан кейин уша контайнерга богланамиз ва
+ php artisan migrate киламиз
+
+4) UserController имизга UserSeeder тузиб олмокчимиз агар биз docker даги узимизга кераки булган контайнерда булсак 
+у холда php artisan make:seeder UserSeeder деб тузиб оламиз. Агар узмизга керакли булган docker container га уланмаган булсак у холда 
+3-чи булимдагни такрорлашимиз лозим
+
+5)
