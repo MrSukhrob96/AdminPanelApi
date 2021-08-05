@@ -24,16 +24,15 @@ Route::post("login", [AuthController::class, 'login']);
 
 Route::apiResource('orders', OrderController::class)->only("index", "show");
 
-/*
 Route::middleware(['auth:api'])->group(function () {
 	Route::get("user", [UserController::class, 'user']);
 	Route::put("users/info", [UserController::class, 'updateInfo']);
 	Route::put("users/password", [UserController::class, 'updatePassword']);
 	Route::post("upload", [ImageController::class, "upload"]);
-	
+	Route::get("export/csv", [OrderController::class, 'export']);
+
 	Route::apiResource('users', UserController::class);
 	Route::apiResource('roles', RolesController::class);
 	Route::apiResource('products', ProductsController::class);
 	Route::apiResource('orders', OrderController::class)->only("index", "show");
 });
-*/
