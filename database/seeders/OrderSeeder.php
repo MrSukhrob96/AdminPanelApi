@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Order;
-use App\Models\OrderItem;
+use App\Models\OrderItems;
 
 class OrderSeeder extends Seeder
 {
@@ -17,7 +17,7 @@ class OrderSeeder extends Seeder
     {
         Order::factory(20)->create()
 			->each(function(Order $order){
-				OrderItem::factory(random_int(1, 5))->create([
+				OrderItems::factory(random_int(1, 5))->create([
 					"order_id" => $order->id,
 				]);
 			});

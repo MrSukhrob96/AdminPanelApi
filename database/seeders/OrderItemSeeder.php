@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\OrderItem;
+use App\Models\OrderItems;
 
 class OrderItemSeeder extends Seeder
 {
@@ -14,6 +14,6 @@ class OrderItemSeeder extends Seeder
      */
     public function run()
     {
-        OrderItem::factory(20)->create();
+        OrderItems::factory(20)->create();
     }
 }
