@@ -14,23 +14,13 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
+
   public function index()
   {
     $users = User::paginate();
     return UserResource::collection($users);
   }
 
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
   public function store(UserCreateRequest $request)
   {
     $user = User::create($request->only("first_name", "last_name", "email", "role_id") + array(
@@ -40,12 +30,6 @@ class UserController extends Controller
     return response(new UserResource($user), 201);
   }
 
-  /**
-   * Display the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function show($id)
   {
     $user = User::find($id);
@@ -53,13 +37,6 @@ class UserController extends Controller
     return new UserResource($user);
   }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function update(UserUpdateRequest $request, $id)
   {
     $user = User::find($id);
@@ -69,12 +46,6 @@ class UserController extends Controller
     return response(new UserResource($user), 202);
   }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function destroy($id)
   {
     User::destroy($id);
@@ -84,7 +55,13 @@ class UserController extends Controller
 
   public function user()
   {
-    return new UserResource(Auth::user());
+    $user = Auth::user();
+
+    return (new UserResource($user))->additional(array(
+      'data' => array(
+        'permission' => $user->permissions()
+      )
+    ));
   }
 
   public function updateInfo(UserUpdateRequest $request)

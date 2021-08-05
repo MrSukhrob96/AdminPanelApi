@@ -6,73 +6,63 @@ use Illuminate\Http\Request;
 use App\Models\Role;
 
 use App\Http\Resources\RoleResource;
+use Illuminate\Support\Facades\DB;
 
 class RolesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $roles = RoleResource::collection(Role::all());
-		
-		return response(new RoleResource($roles), 200);
+
+  public function index()
+  {
+    return RoleResource::collection(Role::all());
+  }
+
+
+  public function store(Request $request)
+  {
+    $role = Role::create($request->only("name"));
+
+    if ($permissions = $request->input('permissions')) {
+      foreach ($permissions as $permission_id) {
+        DB::table('role_permission')->insert([
+          'role_id' => $role->id,
+          'permission_id' => $permission_id
+        ]);
+      }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $role = Role::create($request->only("name"));
-		
-		return response(new RoleResource($roles), 201;)
+    return response(new RoleResource($role), 201);
+  }
+
+
+  public function show($id)
+  {
+    return new RoleResource(Role::find($id));
+  }
+
+  public function update(Request $request, $id)
+  {
+    $role = Role::find($id);
+    $role->update($request->only("name"));
+
+    DB::table('role_permission')->where('role_id', $role->id)->delete();
+
+    if ($permissions = $request->input('permissions')) {
+      foreach ($permissions as $permission_id) {
+        DB::table('role_permission')->insert([
+          'role_id' => $role->id,
+          'permission_id' => $permission_id
+        ]);
+      }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $role = Role::find($id);
-		
-		return response(new RoleResource($roles), 200);
-    }
+    return response(new RoleResource($role), 202);
+  }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $role = Role::find($id);
-		
-		$role->update($request->only("name"));
-		
-		return response(new RoleResource($roles), 202);
-    }
+  public function destroy($id)
+  {
+    DB::table('role_permission')->where('role_id', $id)->delete();
+    Role::destroy($id);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-		Role::destroy($id);
-		
-		return response(null, 204);
-    }
+    return response(null, 204);
+  }
 }
